@@ -3,8 +3,6 @@ class EMT_Admin {
     public function __construct() {
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
-        add_action('admin_notices', array($this, 'display_migrate_guru_notice'));
-        add_action('activated_plugin', array($this, 'redirect_after_migrate_guru_activation'));
     }
 
     public function add_admin_menu() {
@@ -96,12 +94,5 @@ class EMT_Admin {
             <?php endif; ?>
         </div>
         <?php
-    }
-
-    public function redirect_after_migrate_guru_activation($plugin) {
-        if ($plugin === 'migrate-guru/migrate-guru.php') {
-            wp_safe_redirect(admin_url('admin.php?page=elementor-migration-tool'));
-            exit;
-        }
     }
 } 
