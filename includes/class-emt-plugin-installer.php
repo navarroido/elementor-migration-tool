@@ -50,7 +50,7 @@ class EMT_Plugin_Installer {
             <p>
                 <?php 
                 printf(
-                    __('Elementor Migration Tool requires %s to be installed and activated. %s', 'elementor-migration-tool'),
+                    __('Elementor Migration Tool requires %s to be installed and activated %s', 'elementor-migration-tool'),
                     '<strong>' . esc_html($plugin['name']) . '</strong>',
                     '<button class="button button-primary emt-install-plugin" data-slug="' . esc_attr($plugin['slug']) . '">' . 
                     __('Install Now', 'elementor-migration-tool') . 
