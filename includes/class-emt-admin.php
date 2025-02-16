@@ -17,17 +17,6 @@ class EMT_Admin {
     }
 
     public function enqueue_admin_assets($hook) {
-        if ('toplevel_page_elementor-migration-tool' !== $hook) {
-            return;
-        }
-
-        wp_enqueue_style(
-            'emt-admin-style',
-            EMT_PLUGIN_URL . 'assets/css/admin.css',
-            array(),
-            EMT_VERSION
-        );
-
         wp_enqueue_script(
             'emt-admin-script',
             EMT_PLUGIN_URL . 'assets/js/admin.js',
@@ -39,6 +28,15 @@ class EMT_Admin {
         wp_localize_script('emt-admin-script', 'emtAdmin', array(
             'nonce' => wp_create_nonce('emt_install_plugin')
         ));
+
+        if ('toplevel_page_elementor-migration-tool' === $hook) {
+            wp_enqueue_style(
+                'emt-admin-style',
+                EMT_PLUGIN_URL . 'assets/css/admin.css',
+                array(),
+                EMT_VERSION
+            );
+        }
     }
 
     public function render_admin_page() {
