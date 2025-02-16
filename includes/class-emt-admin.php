@@ -3,8 +3,6 @@ class EMT_Admin {
     public function __construct() {
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
-        remove_all_actions('admin_notices');
-        add_action('admin_notices', array($this, 'display_migrate_guru_notice'));
     }
 
     public function add_admin_menu() {
@@ -78,36 +76,39 @@ class EMT_Admin {
                     </div>
                 </div>
             </div>
+
+            <?php
+            // More robust check for Migrate Guru
+            function is_migrate_guru_active() {
+                // Check if get_plugins() function exists
+                if (!function_exists('get_plugins')) {
+                    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                }
+
+                $all_plugins = get_plugins();
+                $is_installed = isset($all_plugins['migrate-guru/migrate-guru.php']);
+                
+                // Check for both normal and network activation
+                $is_activated = in_array('migrate-guru/migrate-guru.php', (array) get_option('active_plugins', array()));
+                if (is_multisite()) {
+                    $is_activated = $is_activated || is_plugin_active_for_network('migrate-guru/migrate-guru.php');
+                }
+
+                return $is_installed && $is_activated;
+            }
+
+            // Only show notice if Migrate Guru is not installed or not activated
+            if (!is_migrate_guru_active()) : ?>
+                <div class="notice notice-warning">
+                    <p>
+                        <?php _e('Elementor Migration Tool requires Migrate Guru to be installed and activated.', 'elementor-migration-tool'); ?>
+                        <a href="<?php echo admin_url('plugin-install.php?s=migrate+guru&tab=search&type=term'); ?>">
+                            <?php _e('Install Now', 'elementor-migration-tool'); ?>
+                        </a>
+                    </p>
+                </div>
+            <?php endif; ?>
         </div>
         <?php
-    }
-
-    private function is_migrate_guru_active() {
-        if (!function_exists('get_plugins')) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-        }
-
-        $all_plugins = get_plugins();
-        $is_installed = isset($all_plugins['migrate-guru/migrate-guru.php']);
-        
-        $is_activated = in_array('migrate-guru/migrate-guru.php', (array) get_option('active_plugins', array()));
-        if (is_multisite()) {
-            $is_activated = $is_activated || is_plugin_active_for_network('migrate-guru/migrate-guru.php');
-        }
-
-        return $is_installed && $is_activated;
-    }
-
-    public function display_migrate_guru_notice() {
-        if (!$this->is_migrate_guru_active()) : ?>
-            <div class="notice notice-warning">
-                <p>
-                    <?php _e('Elementor Migration Tool requires Migrate Guru to be installed and activated.', 'elementor-migration-tool'); ?>
-                    <a href="<?php echo admin_url('plugin-install.php?s=migrate+guru&tab=search&type=term'); ?>">
-                        <?php _e('Install Now', 'elementor-migration-tool'); ?>
-                    </a>
-                </p>
-            </div>
-        <?php endif;
     }
 } 
