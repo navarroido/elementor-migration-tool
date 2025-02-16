@@ -76,6 +76,22 @@ class EMT_Admin {
                     </div>
                 </div>
             </div>
+
+            <?php
+            // Check if Migrate Guru is installed and activated
+            $migrate_guru_installed = in_array('migrate-guru/migrate-guru.php', apply_filters('active_plugins', get_option('active_plugins')));
+            
+            // Only show notice if Migrate Guru is not installed
+            if (!$migrate_guru_installed) : ?>
+                <div class="notice notice-warning">
+                    <p>
+                        <?php _e('Elementor Migration Tool requires Migrate Guru to be installed and activated.', 'elementor-migration-tool'); ?>
+                        <a href="<?php echo admin_url('plugin-install.php?s=migrate+guru&tab=search&type=term'); ?>">
+                            <?php _e('Install Now', 'elementor-migration-tool'); ?>
+                        </a>
+                    </p>
+                </div>
+            <?php endif; ?>
         </div>
         <?php
     }
