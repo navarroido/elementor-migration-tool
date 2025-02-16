@@ -150,4 +150,112 @@ class EMT_Plugin_Installer {
             wp_send_json_error('Installation failed: ' . $e->getMessage());
         }
     }
+
+    public function install_required_plugins() {
+        if (!current_user_can('install_plugins')) {
+            return false;
+        }
+
+        require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+        require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+        $results = array();
+
+        foreach ($this->required_plugins as $plugin) {
+            if (!$this->is_plugin_installed($plugin['slug'])) {
+                $result = $this->install_plugin($plugin['slug']);
+                $results[$plugin['slug']] = $result;
+            } elseif (!$this->is_plugin_active($plugin['slug'])) {
+                $result = $this->activate_plugin($plugin['slug']);
+                $results[$plugin['slug']] = $result;
+            }
+        }
+
+        return $results;
+    }
+
+    private function install_plugin($slug) {
+        try {
+            $api = plugins_api('plugin_information', array(
+                'slug' => $slug,
+                'fields' => array(
+                    'short_description' => false,
+                    'sections' => false,
+                    'requires' => false,
+                    'rating' => false,
+                    'ratings' => false,
+                    'downloaded' => false,
+                    'last_updated' => false,
+                    'added' => false,
+                    'tags' => false,
+                    'compatibility' => false,
+                    'homepage' => false,
+                    'donate_link' => false,
+                ),
+            ));
+
+            if (is_wp_error($api)) {
+                return array('success' => false, 'message' => $api->get_error_message());
+            }
+
+            $upgrader = new Plugin_Upgrader(new WP_Ajax_Upgrader_Skin());
+            $result = $upgrader->install($api->download_link);
+
+            if (is_wp_error($result)) {
+                return array('success' => false, 'message' => $result->get_error_message());
+            }
+
+            // Get the plugin basename
+            $plugin_basename = $upgrader->plugin_info();
+            
+            if (!$plugin_basename) {
+                return array('success' => false, 'message' => 'Could not determine plugin basename');
+            }
+
+            // Activate the plugin
+            $activation_result = $this->activate_plugin($plugin_basename);
+            
+            if (!$activation_result['success']) {
+                return $activation_result;
+            }
+
+            return array('success' => true, 'message' => 'Plugin installed and activated successfully');
+
+        } catch (Exception $e) {
+            return array('success' => false, 'message' => $e->getMessage());
+        }
+    }
+
+    private function activate_plugin($plugin_basename) {
+        if (!is_plugin_active($plugin_basename)) {
+            $activation_result = activate_plugin($plugin_basename);
+            
+            if (is_wp_error($activation_result)) {
+                return array('success' => false, 'message' => $activation_result->get_error_message());
+            }
+        }
+        return array('success' => true, 'message' => 'Plugin activated successfully');
+    }
+
+    private function is_plugin_active($slug) {
+        $plugin_basename = $this->get_plugin_basename($slug);
+        return is_plugin_active($plugin_basename);
+    }
+
+    private function get_plugin_basename($slug) {
+        $possible_bases = array(
+            $slug . '/plugin.php',
+            $slug . '/' . $slug . '.php',
+            $slug . '/index.php'
+        );
+
+        foreach ($possible_bases as $base) {
+            if (file_exists(WP_PLUGIN_DIR . '/' . $base)) {
+                return $base;
+            }
+        }
+
+        return $slug . '/' . $slug . '.php'; // Default fallback
+    }
 } 
