@@ -56,6 +56,8 @@ class EMT_Admin {
                         <li><?php _e('Share your experience <a href="https://www.trustpilot.com/review/hosting.elementor.com?utm_medium=Trustbox&utm_source=migrationPlugin" target="_blank">here</a>', 'elementor-migration-tool'); ?></li>
                     </ol>
 
+                    <hr>
+
                     <p><?php _e('Need help? We can assist you to migrate your site for free!', 'elementor-migration-tool'); ?></p>
                     <p><?php _e('Send us a message <a href="https://elementor.com/support/" target="_blank">here</a>', 'elementor-migration-tool'); ?></p>
                 </div>
