@@ -48,12 +48,18 @@ class EMT_Admin {
                 <div class="emt-instructions">
                     <h2><?php _e('Migration Guide', 'elementor-migration-tool'); ?></h2>
                     <ol>
-                        <li><?php _e('Install and activate Migrate Guru plugin', 'elementor-migration-tool'); ?></li>
-                        <li><?php _e('Create a backup of your current site', 'elementor-migration-tool'); ?></li>
-                        <li><?php _e('Set up your Elementor hosting destination', 'elementor-migration-tool'); ?></li>
-                        <li><?php _e('Follow the migration process in Migrate Guru', 'elementor-migration-tool'); ?></li>
+                        <li><?php _e('Make sure Migrate Guru is installed and activated', 'elementor-migration-tool'); ?></li>
+                        <li><?php _e('Set up your Elementor hosting destination from <a href="https://elementor.com/hosting/" target="_blank">here</a>', 'elementor-migration-tool'); ?></li>
+                        <li><?php _e('Follow the migration process in Migrate Guru or watch the video on this page', 'elementor-migration-tool'); ?></li>
+                        <li><?php _e('Copy the token from your Elementor hosted site and paste it in the Migrate Guru wizard', 'elementor-migration-tool'); ?></li>
                         <li><?php _e('Verify your migrated site', 'elementor-migration-tool'); ?></li>
+                        <li><?php _e('Share your experience <a href="https://www.trustpilot.com/review/hosting.elementor.com?utm_medium=Trustbox&utm_source=migrationPlugin" target="_blank">here</a>', 'elementor-migration-tool'); ?></li>
                     </ol>
+                </div>
+
+                <div class="emt-help-section">
+                    <p><?php _e('Need help? We can assist you to migrate your site for free!', 'elementor-migration-tool'); ?></p>
+                    <p><?php _e('Send us a message <a href="https://elementor.com/support/" target="_blank">here</a>', 'elementor-migration-tool'); ?></p>
                 </div>
                 
                 <div class="emt-video">
@@ -62,7 +68,7 @@ class EMT_Admin {
                         <iframe 
                             width="560" 
                             height="315" 
-                            src="https://www.youtube.com/embed/VIDEO_ID" 
+                            src="https://www.youtube.com/embed/lVx2Nlimt2c?si=XL97gWLxdX_nWXyw" 
                             frameborder="0" 
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                             allowfullscreen>
