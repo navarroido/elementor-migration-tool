@@ -1,0 +1,42 @@
+.emt-admin-wrap {
+    margin: 20px;
+}
+
+.emt-content-wrapper {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.emt-instructions,
+.emt-video {
+    flex: 1;
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.emt-instructions ol {
+    margin-left: 20px;
+}
+
+.emt-instructions li {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.emt-video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+
+.emt-video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+} 
