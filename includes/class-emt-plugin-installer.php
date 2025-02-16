@@ -27,7 +27,21 @@ class EMT_Plugin_Installer {
 
     private function is_plugin_installed($slug) {
         $installed_plugins = get_plugins();
-        return isset($installed_plugins[$slug . '/plugin.php']);
+        
+        // Check for multiple possible plugin base names
+        $possible_bases = array(
+            $slug . '/plugin.php',
+            $slug . '/' . $slug . '.php',
+            $slug . '/index.php'
+        );
+
+        foreach ($possible_bases as $base) {
+            if (isset($installed_plugins[$base])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function display_install_notice($plugin) {
@@ -63,6 +77,7 @@ class EMT_Plugin_Installer {
 
         include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
         include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+        include_once ABSPATH . 'wp-admin/includes/plugin.php';
 
         $api = plugins_api('plugin_information', array(
             'slug' => $slug,
@@ -93,6 +108,13 @@ class EMT_Plugin_Installer {
             wp_send_json_error($result->get_error_message());
         }
 
-        wp_send_json_success(__('Plugin installed successfully.', 'elementor-migration-tool'));
+        // Activate the plugin after installation
+        $activate = activate_plugin($slug . '/' . $slug . '.php');
+        
+        if (is_wp_error($activate)) {
+            wp_send_json_error(__('Plugin installed but could not be activated.', 'elementor-migration-tool'));
+        }
+
+        wp_send_json_success(__('Plugin installed and activated successfully.', 'elementor-migration-tool'));
     }
 } 

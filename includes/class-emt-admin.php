@@ -27,6 +27,18 @@ class EMT_Admin {
             array(),
             EMT_VERSION
         );
+
+        wp_enqueue_script(
+            'emt-admin-script',
+            EMT_PLUGIN_URL . 'assets/js/admin.js',
+            array('jquery'),
+            EMT_VERSION,
+            true
+        );
+
+        wp_localize_script('emt-admin-script', 'emtAdmin', array(
+            'nonce' => wp_create_nonce('emt_install_plugin')
+        ));
     }
 
     public function render_admin_page() {
